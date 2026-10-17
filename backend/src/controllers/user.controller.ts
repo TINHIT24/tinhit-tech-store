@@ -143,3 +143,91 @@ export const deleteAddress = async (req: Request, res: Response, next: NextFunct
     next(error);
   }
 };
+
+// ADMIN USER MANAGEMENT HANDLERS
+
+export const getAllUsers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const { page, limit, search, role, status, sortBy, sortOrder } = req.query;
+
+    const result = await userService.getAllUsers({
+      page: page ? Number(page) : 1,
+      limit: limit ? Number(limit) : 10,
+      search: search as string,
+      role: role as any,
+      status: status as any,
+      sortBy: sortBy as string,
+      sortOrder: sortOrder as any,
+    });
+
+    res.status(200).json({
+      success: true,
+      data: result.users,
+      pagination: result.pagination,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getUserById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const targetUserId = req.params.id as string;
+    const user = await userService.getUserById(targetUserId);
+
+    res.status(200).json({
+      success: true,
+      data: user,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const createUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const newUser = await userService.createUserByAdmin(req.body);
+
+    res.status(201).json({
+      success: true,
+      message: 'Tạo tài khoản người dùng thành công.',
+      data: newUser,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateUserByAdmin = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const adminId = req.user!.userId;
+    const targetUserId = req.params.id as string;
+
+    const updatedUser = await userService.updateUserByAdmin(adminId, targetUserId, req.body);
+
+    res.status(200).json({
+      success: true,
+      message: 'Cập nhật thông tin người dùng thành công.',
+      data: updatedUser,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteUserByAdmin = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const adminId = req.user!.userId;
+    const targetUserId = req.params.id as string;
+
+    const result = await userService.deleteUserByAdmin(adminId, targetUserId);
+
+    res.status(200).json({
+      success: true,
+      message: result.message,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
