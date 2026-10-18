@@ -121,3 +121,25 @@ model VerificationToken {
   @@index([email, type])
   @@map("verification_tokens")
 }
+
+model Category {
+  id          String     @id @default(uuid()) @db.Uuid
+  name        String     @db.VarChar(100)
+  slug        String     @unique @db.VarChar(120)
+  description String?    @db.Text
+  imageUrl    String?    @map("image_url") @db.Text
+  iconUrl     String?    @map("icon_url") @db.Text
+  parentId    String?    @map("parent_id") @db.Uuid
+  order       Int        @default(0)
+  isActive    Boolean    @default(true) @map("is_active")
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+
+  parent      Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
+  children    Category[] @relation("CategoryHierarchy")
+
+  @@index([parentId])
+  @@index([slug])
+  @@map("categories")
+}
+
