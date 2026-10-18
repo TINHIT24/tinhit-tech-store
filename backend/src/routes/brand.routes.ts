@@ -9,6 +9,7 @@ import {
 } from '../controllers/brand.controller';
 import { authenticateToken } from '../middlewares/auth.middleware';
 import { authorizeRoles } from '../middlewares/role.middleware';
+import { validateUuidParam } from '../middlewares/validate.middleware';
 import { Role } from '@prisma/client';
 
 const router = Router();
@@ -27,12 +28,12 @@ router.get('/:identifier', getBrandByIdentifier);
 router.post('/', authenticateToken, authorizeRoles(Role.ADMIN), createBrand);
 
 // [PUT] /brands/:id - Cập nhật thông tin thương hiệu
-router.put('/:id', authenticateToken, authorizeRoles(Role.ADMIN), updateBrand);
+router.put('/:id', authenticateToken, authorizeRoles(Role.ADMIN), validateUuidParam('id'), updateBrand);
 
 // [PATCH] /brands/:id/status - Bật/tắt trạng thái hiển thị
-router.patch('/:id/status', authenticateToken, authorizeRoles(Role.ADMIN), toggleBrandStatus);
+router.patch('/:id/status', authenticateToken, authorizeRoles(Role.ADMIN), validateUuidParam('id'), toggleBrandStatus);
 
 // [DELETE] /brands/:id - Xóa thương hiệu
-router.delete('/:id', authenticateToken, authorizeRoles(Role.ADMIN), deleteBrand);
+router.delete('/:id', authenticateToken, authorizeRoles(Role.ADMIN), validateUuidParam('id'), deleteBrand);
 
 export default router;

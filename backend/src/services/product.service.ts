@@ -1,6 +1,7 @@
 import prisma from '../config/prisma';
 import { generateSlug } from '../utils/slug.util';
 import { ProductStatus } from '@prisma/client';
+import { isValidUuid } from '../middlewares/validate.middleware';
 
 export interface CreateProductVariantDTO {
   sku: string;
@@ -108,6 +109,10 @@ export class ProductService {
       throw { statusCode: 400, message: 'Danh mục sản phẩm (categoryId) là bắt buộc.' };
     }
 
+    if (!isValidUuid(categoryId)) {
+      throw { statusCode: 400, message: 'ID danh mục (categoryId) không đúng định dạng UUID.' };
+    }
+
     // Kiểm tra danh mục có tồn tại không
     const category = await prisma.category.findUnique({ where: { id: categoryId } });
     if (!category) {
@@ -116,6 +121,9 @@ export class ProductService {
 
     // Kiểm tra thương hiệu (nếu có)
     if (brandId) {
+      if (!isValidUuid(brandId)) {
+        throw { statusCode: 400, message: 'ID thương hiệu (brandId) không đúng định dạng UUID.' };
+      }
       const brand = await prisma.brand.findUnique({ where: { id: brandId } });
       if (!brand) {
         throw { statusCode: 404, message: 'Thương hiệu được chỉ định không tồn tại.' };
@@ -250,11 +258,17 @@ export class ProductService {
 
     // 2. Lọc theo danh mục
     if (query.categoryId) {
+      if (!isValidUuid(query.categoryId)) {
+        throw { statusCode: 400, message: 'categoryId tìm kiếm không đúng định dạng UUID.' };
+      }
       where.categoryId = query.categoryId;
     }
 
     // 3. Lọc theo thương hiệu
     if (query.brandId) {
+      if (!isValidUuid(query.brandId)) {
+        throw { statusCode: 400, message: 'brandId tìm kiếm không đúng định dạng UUID.' };
+      }
       where.brandId = query.brandId;
     }
 
@@ -482,6 +496,9 @@ export class ProductService {
 
     // Xử lý danh mục nếu có thay đổi
     if (data.categoryId && data.categoryId !== product.categoryId) {
+      if (!isValidUuid(data.categoryId)) {
+        throw { statusCode: 400, message: 'ID danh mục (categoryId) không đúng định dạng UUID.' };
+      }
       const category = await prisma.category.findUnique({ where: { id: data.categoryId } });
       if (!category) {
         throw { statusCode: 404, message: 'Danh mục được chỉ định không tồn tại.' };
@@ -490,6 +507,9 @@ export class ProductService {
 
     // Xử lý thương hiệu nếu có thay đổi
     if (data.brandId && data.brandId !== product.brandId) {
+      if (!isValidUuid(data.brandId)) {
+        throw { statusCode: 400, message: 'ID thương hiệu (brandId) không đúng định dạng UUID.' };
+      }
       const brand = await prisma.brand.findUnique({ where: { id: data.brandId } });
       if (!brand) {
         throw { statusCode: 404, message: 'Thương hiệu được chỉ định không tồn tại.' };

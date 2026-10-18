@@ -9,6 +9,7 @@ import {
 } from '../controllers/category.controller';
 import { authenticateToken } from '../middlewares/auth.middleware';
 import { authorizeRoles } from '../middlewares/role.middleware';
+import { validateUuidParam } from '../middlewares/validate.middleware';
 import { Role } from '@prisma/client';
 
 const router = Router();
@@ -27,12 +28,12 @@ router.get('/:identifier', getCategoryByIdentifier);
 router.post('/', authenticateToken, authorizeRoles(Role.ADMIN), createCategory);
 
 // [PUT] /categories/:id - Cập nhật toàn bộ thông tin danh mục
-router.put('/:id', authenticateToken, authorizeRoles(Role.ADMIN), updateCategory);
+router.put('/:id', authenticateToken, authorizeRoles(Role.ADMIN), validateUuidParam('id'), updateCategory);
 
 // [PATCH] /categories/:id/status - Bật/tắt nhanh trạng thái hiển thị
-router.patch('/:id/status', authenticateToken, authorizeRoles(Role.ADMIN), toggleCategoryStatus);
+router.patch('/:id/status', authenticateToken, authorizeRoles(Role.ADMIN), validateUuidParam('id'), toggleCategoryStatus);
 
 // [DELETE] /categories/:id - Xóa danh mục (?force=true nếu muốn gỡ liên kết danh mục con)
-router.delete('/:id', authenticateToken, authorizeRoles(Role.ADMIN), deleteCategory);
+router.delete('/:id', authenticateToken, authorizeRoles(Role.ADMIN), validateUuidParam('id'), deleteCategory);
 
 export default router;
