@@ -5,6 +5,7 @@ import userRoutes from './user.routes';
 import categoryRoutes from './category.routes';
 import brandRoutes from './brand.routes';
 import productRoutes from './product.routes';
+import uploadRoutes from './upload.routes';
 
 const router = Router();
 
@@ -15,6 +16,7 @@ router.use('/users', userRoutes);
 router.use('/categories', categoryRoutes);
 router.use('/brands', brandRoutes);
 router.use('/products', productRoutes);
+router.use('/upload', uploadRoutes);
 
 export default router;
 
