@@ -6,6 +6,9 @@ import categoryRoutes from './category.routes';
 import brandRoutes from './brand.routes';
 import productRoutes from './product.routes';
 import uploadRoutes from './upload.routes';
+import cartRoutes from './cart.routes';
+import couponRoutes from './coupon.routes';
+import orderRoutes from './order.routes';
 
 const router = Router();
 
@@ -17,6 +20,10 @@ router.use('/categories', categoryRoutes);
 router.use('/brands', brandRoutes);
 router.use('/products', productRoutes);
 router.use('/upload', uploadRoutes);
+router.use('/cart', cartRoutes);
+router.use('/coupons', couponRoutes);
+router.use('/orders', orderRoutes);
 
 export default router;
+
 
