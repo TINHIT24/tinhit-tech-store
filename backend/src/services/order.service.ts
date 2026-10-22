@@ -1,6 +1,7 @@
 import { Prisma, OrderStatus, PaymentMethod, PaymentStatus, Role, DiscountType } from '@prisma/client';
 import prisma from '../config/prisma';
 import { emailService } from './email.service';
+import { paymentService } from './payment.service';
 
 export interface CheckoutItemInput {
   variantId: string;
@@ -622,7 +623,22 @@ export class OrderService {
         console.error('[OrderService] Lỗi gửi email xác nhận:', err);
       });
 
-    return createdOrder;
+    let paymentInfo: any = null;
+    if (
+      createdOrder.payment?.method === PaymentMethod.MOMO ||
+      createdOrder.payment?.method === PaymentMethod.BANK_TRANSFER
+    ) {
+      try {
+        paymentInfo = await paymentService.getPaymentDetails(createdOrder.id, userId);
+      } catch (err) {
+        console.error('[OrderService] Lỗi tạo thông tin thanh toán chuyển khoản MoMo:', err);
+      }
+    }
+
+    return {
+      ...createdOrder,
+      paymentInfo,
+    };
   }
 
   /**

@@ -26,4 +26,14 @@ export const config = {
     apiSecret: process.env.CLOUDINARY_API_SECRET || '',
     folder: process.env.CLOUDINARY_FOLDER || 'tinhit-tech-store',
   },
+  momo: {
+    phone: process.env.MOMO_PHONE || '0901234567',
+    accountName: process.env.MOMO_ACCOUNT_NAME || 'TINHIT TECH STORE',
+    partnerCode: process.env.MOMO_PARTNER_CODE || 'MOMO',
+    accessKey: process.env.MOMO_ACCESS_KEY || '',
+    secretKey: process.env.MOMO_SECRET_KEY || '',
+    endpoint: process.env.MOMO_ENDPOINT || 'https://test-payment.momo.vn/v2/gateway/api/create',
+    redirectUrl: process.env.MOMO_REDIRECT_URL || 'http://localhost:3000/orders/payment-result',
+    ipnUrl: process.env.MOMO_IPN_URL || 'http://localhost:5000/api/payments/momo/ipn',
+  },
 };

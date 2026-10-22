@@ -9,6 +9,7 @@ import uploadRoutes from './upload.routes';
 import cartRoutes from './cart.routes';
 import couponRoutes from './coupon.routes';
 import orderRoutes from './order.routes';
+import paymentRoutes from './payment.routes';
 
 const router = Router();
 
@@ -23,6 +24,7 @@ router.use('/upload', uploadRoutes);
 router.use('/cart', cartRoutes);
 router.use('/coupons', couponRoutes);
 router.use('/orders', orderRoutes);
+router.use('/payments', paymentRoutes);
 
 export default router;
 
